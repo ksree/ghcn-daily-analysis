@@ -15,4 +15,3 @@ object Run {
 
 }
 
-Vielen Dank. Ich habe einen Termin gebucht
