@@ -5,12 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>GHCN-Daily-Analysis</artifactId>
+    <artifactId>ghcn-daily-analysis</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
         <scala.version>2.12</scala.version>
-        <scala.major.minor.version>2.11.12</scala.major.minor.version>
         <java.version>1.8</java.version>
         <scala.maven.plugin.version>3.3.2</scala.maven.plugin.version>
         <maven.compiler.plugin.version>3.7.0</maven.compiler.plugin.version>
@@ -30,8 +29,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -125,6 +124,16 @@
             <groupId>com.google.cloud.bigdataoss</groupId>
             <artifactId>gcs-connector</artifactId>
             <version>${gcs.hadoop.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-aws</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk</artifactId>
+            <version>1.11.863</version>
         </dependency>
         <dependency>
             <groupId>com.typesafe</groupId>
