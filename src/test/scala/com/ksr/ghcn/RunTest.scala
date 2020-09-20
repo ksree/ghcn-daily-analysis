@@ -4,7 +4,7 @@ import com.ksr.ghcn.Run.getYearlyData
 import com.ksr.ghcn.conf.AppConfig
 import org.apache.hadoop.conf.Configuration
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{RelationalGroupedDataset, SparkSession}
 import org.apache.spark.SparkContext
 import org.scalatest.{BeforeAndAfterAll, FlatSpec}
 
