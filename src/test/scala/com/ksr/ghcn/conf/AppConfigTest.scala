@@ -21,6 +21,10 @@ class AppConfigTest extends FlatSpec {
     assert(appConfig.countryCodesMap.getOrElse("CA", "") === "Canada")
   }
 
+  "state codes" should "be loaded " in {
+    assert(appConfig.stateCodesMap.getOrElse("NE", "") === "NEBRASKA")
+  }
+
   "stations" should "be loaded" in {
     val station: Station =appConfig.stationMap.getOrElse("USW00014922", invalidStation)
     assert(station.id === "USW00014922" )

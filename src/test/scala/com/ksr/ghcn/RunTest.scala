@@ -1,6 +1,6 @@
 package com.ksr.ghcn
 
-import com.ksr.ghcn.Run.getYearlyData
+import com.ksr.ghcn.Run.{transformGHCND, getYearlyRawData}
 import com.ksr.ghcn.conf.AppConfig
 import org.apache.hadoop.conf.Configuration
 import org.apache.spark.rdd.RDD
@@ -20,10 +20,16 @@ class RunTest extends FlatSpec with BeforeAndAfterAll{
     .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
     .getOrCreate();
 
-  "getYearlyData" should "return the yearly data " in {
-    val data = getYearlyData(1788)
-    data.show(5)
-    assert(data.collect().size == 1464)
+  val yearlyRawData = getYearlyRawData(1788)
+
+  "getYearlyRawData" should "return the yearly data " in {
+    yearlyRawData.show(5)
+    assert(yearlyRawData.collect().size == 1464)
   }
 
+  "transformGHCND" should "return the yearly data " in {
+    val ghcndData = transformGHCND(yearlyRawData)
+    ghcndData.show(5)
+    assert(ghcndData.collect().size == 1464)
+  }
 }
