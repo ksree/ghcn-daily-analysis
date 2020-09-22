@@ -7,7 +7,7 @@ import scala.collection.JavaConverters.asScalaSetConverter
 import scala.io.Source
 
 case class AppConfig(awsKey: String, awsSecret: String, awsBucket: String,
-                     stateCodesMap: Predef.Map[String, String],countryCodesMap: Predef.Map[String, String],
+                     stateCodesMap: Predef.Map[String, String], countryCodesMap: Predef.Map[String, String],
                      stationMap: Map[String, Station])
 
 object AppConfig {
@@ -17,9 +17,12 @@ object AppConfig {
     val countryCodesMap: Predef.Map[String, String] =
       cc.entrySet().asScala.map(e => e.getKey -> e.getValue.unwrapped().toString.trim).toMap
     val sc = ConfigFactory.load("ghcnd-states.properties")
-    val stateCodesMap: Predef.Map[String, String] =
+    val stateCodesMap: Predef.Map[String, String] = {
       sc.entrySet().asScala.map(e => e.getKey -> e.getValue.unwrapped().toString.trim).toMap
-    val bfr = Source.fromResource("ghcnd-stations.properties")
+    }
+    val stream =  getClass.getResourceAsStream("/ghcnd-stations.properties")
+
+    val bfr = Source.fromInputStream(stream)
     val stationMap: Map[String, Station] = (for {
       line <- bfr.getLines
       station = Station(line)

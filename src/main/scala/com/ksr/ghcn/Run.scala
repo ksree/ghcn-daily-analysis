@@ -3,7 +3,7 @@ package com.ksr.ghcn
 import com.ksr.ghcn.conf.AppConfig
 import com.ksr.ghcn.domain.{GHCN_D, GHCN_D_RAW}
 import com.ksr.ghcn.transformer.ghcnDTransform
-import org.apache.spark.sql.{Dataset, SparkSession}
+import org.apache.spark.sql.{Dataset, SaveMode, SparkSession}
 
 object Run {
   def main(args: Array[String]): Unit = {
@@ -16,22 +16,31 @@ object Run {
       .config("spark.hadoop.fs.s3a.secret.key", appConf.awsSecret)
       .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
       .getOrCreate();
+
+    val rawData: Dataset[GHCN_D_RAW] = readGHCNDData(1788)
+    val ghcndData: Dataset[GHCN_D] = transformGHCND(rawData)
+    writeGHCND(ghcndData)
   }
 
-  def getYearlyRawData(year: Int)(implicit spark: SparkSession, appConf: AppConfig): Dataset[GHCN_D_RAW] = {
+  def readGHCNDData(year: Int)(implicit spark: SparkSession, appConf: AppConfig): Dataset[GHCN_D_RAW] = {
     import spark.implicits._
-    val data = spark.read.format("csv")
+    spark.read.format("csv")
       .option("inferSchema", "true")
       .option("header", "false")
       .load(s"${appConf.awsBucket}/$year.csv")
       .toDF("id", "date", "element", "elementValue", "mFlag", "qFlag", "sFlag", "obsTime").as[GHCN_D_RAW]
-    data
   }
 
   def transformGHCND(in: Dataset[GHCN_D_RAW])(implicit spark: SparkSession, appConf: AppConfig): Dataset[GHCN_D] = {
     import spark.implicits._
-    in.map(e => ghcnDTransform.transformGHCNDRaw(e, appConf))
+    ghcnDTransform.groupGHCNDD(in.map(ghcnDTransform.transformGHCNDRaw(_, appConf))).as[GHCN_D]
   }
 
-
+  def writeGHCND(out: Dataset[GHCN_D])(implicit spark: SparkSession, appConf: AppConfig)= {
+    out.write
+      .format("bigquery")
+      .mode(SaveMode.Append)
+      .option("temporaryGcsBucket", "charlotte-kapil-wedding-photos")
+      .save("kapilsreed12-1dataflow:GlobalHistoricalWeatherData200years.ghcn_daily")
+  }
 }

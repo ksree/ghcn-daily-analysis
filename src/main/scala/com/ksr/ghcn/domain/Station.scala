@@ -1,19 +1,19 @@
 package com.ksr.ghcn.domain
 
-case class Station(id: String, latitude: Float, longitude: Float, elevation: Float, state: String, name: String, gsnFlag: String, hcnCrnFlag: String, wmoID: Int)
+case class Station(id: String, latitude: Double, longitude: Double, elevation: Double, state: String, name: String, gsnFlag: String, hcnCrnFlag: String, wmoID: Int)
 
 object Station {
   def apply(value: String): Station = {
     val lat = value.slice(12, 20).trim match {
-      case x if x.nonEmpty => x.toFloat
+      case x if x.nonEmpty => x.toDouble
       case _ => 0f
     }
     val long = value.slice(22, 30).trim match {
-      case x if x.nonEmpty => x.toFloat
+      case x if x.nonEmpty => x.toDouble
       case _ => 0f
     }
     val ele = value.slice(31, 38).trim match {
-      case x if x.nonEmpty => x.toFloat
+      case x if x.nonEmpty => x.toDouble
       case _ => 0f
     }
     val wmoID = value.slice(80, 86).trim match {
