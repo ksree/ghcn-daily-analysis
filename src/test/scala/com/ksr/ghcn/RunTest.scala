@@ -13,8 +13,9 @@ class RunTest extends FlatSpec with BeforeAndAfterAll {
     .builder()
     .appName("GHCN-DAILY-ANALYSIS")
     .config("spark.master", "local")
-    .config("spark.hadoop.fs.s3a.access.key", appConf.awsKey)
-    .config("spark.hadoop.fs.s3a.secret.key", appConf.awsSecret)
+    .config("fs.s3a.aws.credentials.provider", "com.amazonaws.auth.EnvironmentVariableCredentialsProvider")
+    /*    .config("spark.hadoop.fs.s3a.access.key", appConf.awsKey)
+    .config("spark.hadoop.fs.s3a.secret.key", appConf.awsSecret)*/
     .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
     .getOrCreate();
 

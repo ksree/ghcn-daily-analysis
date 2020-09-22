@@ -9,7 +9,6 @@ class AppConfigTest extends FlatSpec {
   val appConfig = AppConfig()
   val invalidStation: Station = Station("InvalidID", 0d, 0d, 0d, "", "", "", "", 0)
   "config" should "have the properties" in {
-    assert(appConfig.awsKey == "AKIA2YJEKYFP5SB45X2V")
     assert(appConfig.awsBucket == "s3a://noaa-ghcn-pds/csv/")
   }
 

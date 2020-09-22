@@ -12,12 +12,11 @@ object Run {
       .builder()
       .appName("GHCN-DAILY-ANALYSIS")
       .config("spark.master", "local")
-      .config("spark.hadoop.fs.s3a.access.key", appConf.awsKey)
-      .config("spark.hadoop.fs.s3a.secret.key", appConf.awsSecret)
+      .config("fs.s3a.aws.credentials.provider", "com.amazonaws.auth.EnvironmentVariableCredentialsProvider")
       .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
       .getOrCreate();
 
-    val rawData: Dataset[GHCN_D_RAW] = readGHCNDData(1788)
+    val rawData: Dataset[GHCN_D_RAW] = readGHCNDData("1788")
     val ghcndData: Dataset[GHCN_D] = transformGHCND(rawData)
     writeGHCND(ghcndData)
   }
