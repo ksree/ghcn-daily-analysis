@@ -22,7 +22,7 @@ object Run {
     writeGHCND(ghcndData)
   }
 
-  def readGHCNDData(year: Int)(implicit spark: SparkSession, appConf: AppConfig): Dataset[GHCN_D_RAW] = {
+  def readGHCNDData(year: String)(implicit spark: SparkSession, appConf: AppConfig): Dataset[GHCN_D_RAW] = {
     import spark.implicits._
     spark.read.format("csv")
       .option("inferSchema", "true")
