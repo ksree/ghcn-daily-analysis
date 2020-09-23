@@ -1,7 +1,12 @@
 # ghcn-daily-analysis
 
-
+Set the following enviornment variables:
+```shell script
 GOOGLE_APPLICATION_CREDENTIALS=your_credentials.json
+AWS_ACCESS_KEY_ID=your_aws_key
+AWS_SECRET_ACCESS_KEY=your_secret
+```
+
 
 ```shell script
 sudo apt-get install -y openjdk-8-jre
