@@ -19,7 +19,7 @@ class RunTest extends FlatSpec with BeforeAndAfterAll {
     .getOrCreate();
 
 
-  val rawData: Dataset[GHCN_D_RAW] = readGHCNDData("1788")
+  val rawData: Dataset[GHCN_D_RAW] = readGHCNDData(1788)
   val ghcndData: Dataset[GHCN_D] = transformGHCND(rawData)
 
   "getYearlyRawData" should "return the yearly data " in {

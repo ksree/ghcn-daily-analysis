@@ -10,7 +10,7 @@ import scala.io.Source
 
 case class AppConfig(awsKey: String, awsSecret: String, awsBucket: String,
                      stateCodesMap: Predef.Map[String, String], countryCodesMap: Predef.Map[String, String],
-                     stationMap: Map[String, Station])
+                     stationMap: Map[String, Station], startDate: Int, endDate: Int)
 
 object AppConfig {
   def apply(args: Array[String]): AppConfig = {
@@ -38,6 +38,6 @@ object AppConfig {
     bfr.close()
 
     AppConfig(conf.getString("AWS_ACCESS_KEY"), conf.getString("AWS_SECRET_KEY"),
-      conf.getString("AWS_BUCKET"), stateCodesMap, countryCodesMap, stationMap)
+      conf.getString("AWS_BUCKET"), stateCodesMap, countryCodesMap, stationMap, conf.getInt("startDate"), conf.getInt("endDate"))
   }
 }

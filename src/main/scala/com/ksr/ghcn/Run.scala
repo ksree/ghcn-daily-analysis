@@ -14,13 +14,15 @@ object Run {
       .config("spark.hadoop.fs.s3a.access.key", appConf.awsKey)
       .config("spark.hadoop.fs.s3a.secret.key", appConf.awsSecret)
       .getOrCreate();
+    for(i <- appConf.startDate to appConf.endDate) {
+      val rawData: Dataset[GHCN_D_RAW] = readGHCNDData(i)
+      val ghcndData: Dataset[GHCN_D] = transformGHCND(rawData)
+      writeGHCND(ghcndData)
+    }
 
-    val rawData: Dataset[GHCN_D_RAW] = readGHCNDData("1763")
-    val ghcndData: Dataset[GHCN_D] = transformGHCND(rawData)
-    writeGHCND(ghcndData)
   }
 
-  def readGHCNDData(year: String)(implicit spark: SparkSession, appConf: AppConfig): Dataset[GHCN_D_RAW] = {
+  def readGHCNDData(year: Int)(implicit spark: SparkSession, appConf: AppConfig): Dataset[GHCN_D_RAW] = {
     import spark.implicits._
     spark.read.format("csv")
       .option("inferSchema", "true")
