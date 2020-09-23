@@ -14,7 +14,7 @@ object Run {
       .config("spark.hadoop.fs.s3a.access.key", appConf.awsKey)
       .config("spark.hadoop.fs.s3a.secret.key", appConf.awsSecret)
       .getOrCreate();
-    for(i <- appConf.startDate to appConf.endDate) {
+    for(i <- appConf.startYear to appConf.endYear) {
       val rawData: Dataset[GHCN_D_RAW] = readGHCNDData(i)
       val ghcndData: Dataset[GHCN_D] = transformGHCND(rawData)
       writeGHCND(ghcndData)
