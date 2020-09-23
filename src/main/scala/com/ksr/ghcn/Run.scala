@@ -15,7 +15,7 @@ object Run {
       .config("spark.hadoop.fs.s3a.secret.key", appConf.awsSecret)
       .getOrCreate();
 
-    val rawData: Dataset[GHCN_D_RAW] = readGHCNDData("*")
+    val rawData: Dataset[GHCN_D_RAW] = readGHCNDData("1763")
     val ghcndData: Dataset[GHCN_D] = transformGHCND(rawData)
     writeGHCND(ghcndData)
   }
