@@ -12,8 +12,6 @@ object Run {
       .builder()
       .appName("GHCN-DAILY-ANALYSIS")
       .config("spark.master", "local")
-      .config("fs.s3a.aws.credentials.provider", "com.amazonaws.auth.EnvironmentVariableCredentialsProvider")
-      .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
       .getOrCreate();
 
     val rawData: Dataset[GHCN_D_RAW] = readGHCNDData("*")
