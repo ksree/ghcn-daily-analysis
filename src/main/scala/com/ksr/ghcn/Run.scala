@@ -7,11 +7,12 @@ import org.apache.spark.sql.{Dataset, SaveMode, SparkSession}
 
 object Run {
   def main(args: Array[String]): Unit = {
-    implicit val appConf: AppConfig = AppConfig.apply()
+    implicit val appConf: AppConfig = AppConfig.apply(args)
     implicit val spark = SparkSession
       .builder()
       .appName("GHCN-DAILY-ANALYSIS")
-      .config("spark.master", "local")
+      .config("spark.hadoop.fs.s3a.access.key", appConf.awsKey)
+      .config("spark.hadoop.fs.s3a.secret.key", appConf.awsSecret)
       .getOrCreate();
 
     val rawData: Dataset[GHCN_D_RAW] = readGHCNDData("*")

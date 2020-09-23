@@ -6,7 +6,7 @@ import org.scalatest.FlatSpec
 
 class AppConfigTest extends FlatSpec {
 
-  val appConfig = AppConfig()
+  val appConfig = AppConfig(Array.empty[String])
   val invalidStation: Station = Station("InvalidID", 0d, 0d, 0d, "", "", "", "", 0)
   "config" should "have the properties" in {
     assert(appConfig.awsBucket == "s3a://noaa-ghcn-pds/csv/")
