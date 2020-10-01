@@ -26,9 +26,9 @@ object Station {
       longitude = long,
       elevation = ele,
       state = value.slice(38, 40),
-      name = value.slice(41, 70),
-      gsnFlag = value.slice(72, 75),
-      hcnCrnFlag = value.slice(76, 79),
+      name = value.slice(41, 70).trim,
+      gsnFlag = value.slice(72, 75).trim,
+      hcnCrnFlag = value.slice(76, 79).trim,
       wmoID = wmoID)
   }
 }
