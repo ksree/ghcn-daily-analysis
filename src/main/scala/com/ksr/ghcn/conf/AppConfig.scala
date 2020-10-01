@@ -8,7 +8,7 @@ import com.typesafe.config.{Config, ConfigFactory}
 import scala.collection.JavaConverters.asScalaSetConverter
 import scala.io.Source
 
-case class AppConfig(awsKey: String, awsSecret: String, awsBucket: String,
+case class AppConfig(awsKey: String, awsSecret: String, awsBucket: String, tempGCSBucket: String, bigQueryTableName: String,
                      stateCodesMap: Predef.Map[String, String], countryCodesMap: Predef.Map[String, String],
                      stationMap: Map[String, Station], startYear: Int, endYear: Int)
 
@@ -38,6 +38,7 @@ object AppConfig {
     bfr.close()
 
     AppConfig(conf.getString("AWS_ACCESS_KEY"), conf.getString("AWS_SECRET_KEY"),
-      conf.getString("AWS_BUCKET"), stateCodesMap, countryCodesMap, stationMap, conf.getInt("startYear"), conf.getInt("endYear"))
+      conf.getString("AWS_BUCKET"), conf.getString("GCS_TEMPORARY_BUCKET"), conf.getString("BIGQUERY_TABLE_NAME"),
+      stateCodesMap, countryCodesMap, stationMap, conf.getInt("startYear"), conf.getInt("endYear"))
   }
 }

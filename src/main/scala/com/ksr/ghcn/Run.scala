@@ -33,14 +33,18 @@ object Run {
 
   def transformGHCND(in: Dataset[GHCN_D_RAW])(implicit spark: SparkSession, appConf: AppConfig): Dataset[GHCN_D] = {
     import spark.implicits._
-    ghcnDTransform.groupGHCNDD(in.map(ghcnDTransform.transformGHCNDRaw(_, appConf))).as[GHCN_D]
+    in.map(ghcnDTransform.transformGHCNDRaw(_, appConf)).as[GHCN_D]
   }
 
   def writeGHCND(out: Dataset[GHCN_D])(implicit spark: SparkSession, appConf: AppConfig)= {
     out.write
       .format("bigquery")
       .mode(SaveMode.Append)
-      .option("temporaryGcsBucket", "charlotte-kapil-wedding-photos")
-      .save("kapilsreed12-1dataflow:GlobalHistoricalWeatherData200years.ghcn_daily")
+      .option("temporaryGcsBucket", appConf.tempGCSBucket)
+      .option("partitionField", "date")
+      .option("partitionType", "DAY")
+      .option("clusteredFields", "satation_id")
+      .option("allowFieldAddition", "true")  //Adds the ALLOW_FIELD_ADDITION SchemaUpdateOption
+      .save(appConf.bigQueryTableName)
   }
 }

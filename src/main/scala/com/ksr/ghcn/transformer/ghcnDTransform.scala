@@ -6,7 +6,6 @@ import java.time.format.DateTimeFormatter
 
 import com.ksr.ghcn.conf.AppConfig
 import com.ksr.ghcn.domain.{GHCN_D, GHCN_D_RAW, Station}
-import org.apache.spark.sql.{DataFrame, Dataset}
 
 
 object ghcnDTransform {
@@ -15,27 +14,28 @@ object ghcnDTransform {
     val elements = explodeElements(in.element, in.elementValue)
     val station = conf.stationMap.getOrElse(in.id, Station("Invalid"))
     val country = getCountry(in.id, conf.countryCodesMap)
-    GHCN_D(id = in.id,
+    GHCN_D(satation_id = in.id,
       date = getDate(in.date),
-      obsTime = "",
-      tMin = elements._1 / 10d, //Since the source temperature is tenths of degrees C
-      tMax = elements._2 / 10d, //Since the source temperature is tenths of degrees C
-      prcp = elements._3,
-      snowfall = elements._4,
-      snowDepth = elements._5,
-      mFlag = in.mFlag,
-      qFlag = in.qFlag,
-      sFlag = in.sFlag,
+      obs_time = in.obsTime,
+      min_temp = elements._1 / 10d, //Since the source temperature is tenths of degrees C
+      max_temp = elements._2 / 10d, //Since the source temperature is tenths of degrees C
+      mean_temp = (elements._1 + elements._2) / 2d, //mean daily temperature
+      prcp = elements._3 / 10d, //convert to mm
+      snowfall = elements._4, //mm
+      snow_depth = elements._5, //mm
+      m_flag = in.mFlag,
+      q_flag = in.qFlag,
+      s_flag = in.sFlag,
       latitude = station.latitude, //latitude of the station (in decimal degrees).
       longitude = station.longitude, // longitude of the station (in decimal degrees).
       elevation = station.elevation,
-      gsnFlag = station.gsnFlag, // flag that indicates whether the station is part of the GCOS Surface Network (GSN).
-      hcnCrnFlag = station.hcnCrnFlag, //flag that indicates whether the station is part of the U.S. Historical Climatology Network (HCN).
-      wmoID = station.wmoID, //World Meteorological Organization (WMO) number for the station.
-      stationName = station.name,
-      stateCode = station.state, //U.S. postal code for the state (for U.S. and Canadian stations only).
+      gsn_flag = station.gsnFlag, // flag that indicates whether the station is part of the GCOS Surface Network (GSN).
+      hcn_crn_flag = station.hcnCrnFlag, //flag that indicates whether the station is part of the U.S. Historical Climatology Network (HCN).
+      wmo_id = station.wmoID, //World Meteorological Organization (WMO) number for the station.
+      station_name = station.name,
+      state_code = station.state, //U.S. postal code for the state (for U.S. and Canadian stations only).
       state = conf.stateCodesMap.getOrElse(station.state, ""),
-      countryCode = country._1,
+      country_code = country._1,
       country = country._2
     )
   }
@@ -62,30 +62,28 @@ object ghcnDTransform {
     }
   }
 
-  import org.apache.spark.sql.functions._
-
-  //Group dataset by station id and date.Create one row per station & date containing all the measurements
-  def groupGHCNDD(ghcndData: Dataset[GHCN_D]): DataFrame =
-    ghcndData.groupBy("id", "date")
-      .agg(sum("latitude").as("latitude"),
-        sum("longitude").as("longitude"),
-        sum("elevation").as("elevation"),
-        sum("tMax").as("tMax"),
-        sum("tMin").as("tMin"),
-        sum("prcp").as("prcp"),
-        sum("snowfall").as("snowfall"),
-        sum("snowDepth").as("snowDepth"),
-        first("obsTime").as("obsTime"),
-        first("mFlag").as("mFlag"),
-        first("qFlag").as("qFlag"),
-        first("sFlag").as("sFlag"),
-        first("gsnFlag").as("gsnFlag"),
-        first("hcnCrnFlag").as("hcnCrnFlag"),
-        first("stationName").as("stationName"),
-        first("stateCode").as("stateCode"),
-        first("state").as("state"),
-        first("countryCode").as("countryCode"),
-        first("country").as("country"),
-        first("wmoID").as("wmoID"))
+  /*  //Group dataset by station id and date.Create one row per station & date containing all the measurements
+    def groupGHCNDD(ghcndData: Dataset[GHCN_D]): DataFrame =
+      ghcndData.groupBy("id", "date")
+        .agg(first("latitude").as("latitude"),
+          first("longitude").as("longitude"),
+          first("elevation").as("elevation"),
+          avg("tMax").as("max_temp"),
+          avg("tMin").as("min_temp"),
+          avg("prcp").as("prcp"),
+          avg("snowfall").as("snowfall"),
+          avg("snowDepth").as("snow_depth"),
+          first("obsTime").as("obs_time"),
+          first("mFlag").as("m_flag"),
+          first("qFlag").as("q_flag"),
+          first("sFlag").as("s_flag"),
+          first("gsnFlag").as("gsn_flag"),
+          first("hcnCrnFlag").as("hcn_crn_flag"),
+          first("stationName").as("station_name"),
+          first("stateCode").as("state_code"),
+          first("state").as("state"),
+          first("countryCode").as("country_code"),
+          first("country").as("country"),
+          first("wmoID").as("wmo_id"))*/
 
 }
