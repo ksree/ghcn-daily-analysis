@@ -6,6 +6,9 @@ import java.time.format.DateTimeFormatter
 
 import com.ksr.ghcn.conf.AppConfig
 import com.ksr.ghcn.domain.{GHCN_D, GHCN_D_RAW, Station}
+import org.apache.spark.sql.expressions.Window
+import org.apache.spark.sql.functions.{avg, first}
+import org.apache.spark.sql.{DataFrame, Dataset}
 
 
 object ghcnDTransform {
@@ -62,28 +65,28 @@ object ghcnDTransform {
     }
   }
 
-  /*  //Group dataset by station id and date.Create one row per station & date containing all the measurements
-    def groupGHCNDD(ghcndData: Dataset[GHCN_D]): DataFrame =
-      ghcndData.groupBy("id", "date")
+    //Group dataset by station id and date.Create one row per station & date containing all the measurements
+    def aggregateGHCNDD(ghcndData: Dataset[GHCN_D]): DataFrame =
+      ghcndData.groupBy("satation_id", "date")
         .agg(first("latitude").as("latitude"),
           first("longitude").as("longitude"),
           first("elevation").as("elevation"),
-          avg("tMax").as("max_temp"),
-          avg("tMin").as("min_temp"),
+          avg("max_temp").as("max_temp"),
+          avg("min_temp").as("min_temp"),
+          avg("mean_temp").as("mean_temp"),
           avg("prcp").as("prcp"),
           avg("snowfall").as("snowfall"),
-          avg("snowDepth").as("snow_depth"),
-          first("obsTime").as("obs_time"),
-          first("mFlag").as("m_flag"),
-          first("qFlag").as("q_flag"),
-          first("sFlag").as("s_flag"),
-          first("gsnFlag").as("gsn_flag"),
-          first("hcnCrnFlag").as("hcn_crn_flag"),
-          first("stationName").as("station_name"),
-          first("stateCode").as("state_code"),
+          avg("snow_depth").as("snow_depth"),
+          first("obs_time").as("obs_time"),
+          first("m_flag").as("m_flag"),
+          first("q_flag").as("q_flag"),
+          first("s_flag").as("s_flag"),
+          first("gsn_flag").as("gsn_flag"),
+          first("hcn_crn_flag").as("hcn_crn_flag"),
+          first("station_name").as("station_name"),
+          first("state_code").as("state_code"),
           first("state").as("state"),
-          first("countryCode").as("country_code"),
+          first("country_code").as("country_code"),
           first("country").as("country"),
-          first("wmoID").as("wmo_id"))*/
-
+          first("wmo_id").as("wmo_id"))
 }

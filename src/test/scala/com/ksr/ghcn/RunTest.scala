@@ -3,15 +3,15 @@ package com.ksr.ghcn
 import com.ksr.ghcn.Run.{readGHCNDData, transformGHCND, writeGHCND}
 import com.ksr.ghcn.conf.AppConfig
 import com.ksr.ghcn.domain.{GHCN_D, GHCN_D_RAW}
+import com.ksr.ghcn.transformer.ghcnDTransform.aggregateGHCNDD
 import org.apache.spark.sql.{Dataset, SparkSession}
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Ignore}
 
 //Tests ignore; first set your aws key and secret in test resources application.conf, and then enable this test
-@Ignore
-class RunIntegrationTest extends FlatSpec with BeforeAndAfterAll {
+/*class RunIntegrationTest extends FlatSpec with BeforeAndAfterAll {
 
-/*  implicit val appConf: AppConfig = AppConfig.apply(Array.empty[String])
-  implicit val spark: SparkSession = SparkSession
+  implicit lazy val appConf: AppConfig = AppConfig.apply(Array.empty[String])
+  implicit lazy val spark: SparkSession = SparkSession
     .builder()
     .appName("GHCN-DAILY-ANALYSIS")
     .config("spark.master", "local")
@@ -29,7 +29,7 @@ class RunIntegrationTest extends FlatSpec with BeforeAndAfterAll {
   }
 
   "transformGHCND" should "return the yearly data " in  {
-    assert(ghcndData.collect().length == 732)
+    assert(aggregateGHCNDD(ghcndData).collect().length == 732)
   }
 
   "writeGHCND" should "populate bigquery tables" in  {
