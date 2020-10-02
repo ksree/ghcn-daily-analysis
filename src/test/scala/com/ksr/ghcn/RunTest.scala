@@ -10,7 +10,7 @@ import org.scalatest.{BeforeAndAfterAll, FlatSpec, Ignore}
 //Tests ignore; first set your aws key and secret in test resources application.conf, and then enable this test
 @Ignore
 class RunIntegrationTest extends FlatSpec with BeforeAndAfterAll {
-
+/*
   implicit lazy val appConf: AppConfig = AppConfig.apply(Array.empty[String])
   implicit lazy val spark: SparkSession = SparkSession
     .builder()
@@ -35,6 +35,6 @@ class RunIntegrationTest extends FlatSpec with BeforeAndAfterAll {
 
   "writeGHCND" should "populate bigquery tables" in  {
     writeGHCND(ghcndData.limit(10))
-  }
+  }*/
 
 }
