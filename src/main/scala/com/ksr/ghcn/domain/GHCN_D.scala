@@ -29,5 +29,6 @@ case class GHCN_D(satation_id: String,
                   state_code: String, //U.S. postal code for the state (for U.S. and Canadian stations only).
                   state: String,
                   country_code: String,
-                  country: String
+                  country: String,
+                  partition_date: Date
                  )

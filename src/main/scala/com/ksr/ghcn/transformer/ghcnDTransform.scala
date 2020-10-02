@@ -3,10 +3,10 @@ package com.ksr.ghcn.transformer
 import java.sql.Date
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
 import com.ksr.ghcn.conf.AppConfig
 import com.ksr.ghcn.domain.{GHCN_D, GHCN_D_RAW, Station}
-import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.functions.{avg, first}
 import org.apache.spark.sql.{DataFrame, Dataset}
 
@@ -17,8 +17,9 @@ object ghcnDTransform {
     val elements = explodeElements(in.element, in.elementValue)
     val station = conf.stationMap.getOrElse(in.id, Station("Invalid"))
     val country = getCountry(in.id, conf.countryCodesMap)
+    val inDate: Date = getDate(in.date)
     GHCN_D(satation_id = in.id,
-      date = getDate(in.date),
+      date = inDate,
       obs_time = in.obsTime,
       min_temp = elements._1 / 10d, //Since the source temperature is tenths of degrees C
       max_temp = elements._2 / 10d, //Since the source temperature is tenths of degrees C
@@ -39,7 +40,8 @@ object ghcnDTransform {
       state_code = station.state, //U.S. postal code for the state (for U.S. and Canadian stations only).
       state = conf.stateCodesMap.getOrElse(station.state, ""),
       country_code = country._1,
-      country = country._2
+      country = country._2,
+      partition_date = getPartitionDate(inDate)
     )
   }
 
@@ -48,13 +50,19 @@ object ghcnDTransform {
     Date.valueOf(LocalDate.parse(date, fmtr))
   }
 
+  def getPartitionDate(date: Date): Date = {
+    val calendar: Calendar = Calendar.getInstance()
+      calendar.set(date.toLocalDate.getYear, 1, 1)
+    new java.sql.Date(calendar.getTimeInMillis)
+  }
+
   def getCountry(id: String, countryCodes: Map[String, String]): (String, String) = {
     val code = id.take(2)
     val country = countryCodes.getOrElse(code, "InvalidCountryCode")
     (code, country)
   }
 
-  def explodeElements(element: String, value: String) = {
+  def explodeElements(element: String, value: String): (Double, Double, Double, Double, Double) = {
     element match {
       case "TMIN" => (value.toDouble, 0d, 0d, 0d, 0d)
       case "TMAX" => (0d, value.toDouble, 0d, 0d, 0d)
@@ -88,5 +96,6 @@ object ghcnDTransform {
           first("state").as("state"),
           first("country_code").as("country_code"),
           first("country").as("country"),
-          first("wmo_id").as("wmo_id"))
+          first("wmo_id").as("wmo_id"),
+          first("partition_date").as("parition_date"))
 }
