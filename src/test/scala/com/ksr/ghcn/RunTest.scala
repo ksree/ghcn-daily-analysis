@@ -8,10 +8,9 @@ import org.apache.spark.sql.{Dataset, SparkSession}
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Ignore}
 
 //Tests ignore; first set your aws key and secret in test resources application.conf, and then enable this test
-@Ignore
+//@Ignore
 class RunIntegrationTest extends FlatSpec with BeforeAndAfterAll {
-/*
-  implicit lazy val appConf: AppConfig = AppConfig.apply(Array.empty[String])
+  /*implicit lazy val appConf: AppConfig = AppConfig.apply(Array.empty[String])
   implicit lazy val spark: SparkSession = SparkSession
     .builder()
     .appName("GHCN-DAILY-ANALYSIS")
@@ -22,7 +21,7 @@ class RunIntegrationTest extends FlatSpec with BeforeAndAfterAll {
     .getOrCreate();
 
 
-  val rawData: Dataset[GHCN_D_RAW] = readGHCNDData(1788)
+  val rawData: Dataset[GHCN_D_RAW] = readGHCNDData(2020)
   val ghcndData: Dataset[GHCN_D] = transformGHCND(rawData)
 
   "getYearlyRawData" should "return the yearly data " in  {
@@ -34,7 +33,7 @@ class RunIntegrationTest extends FlatSpec with BeforeAndAfterAll {
   }
 
   "writeGHCND" should "populate bigquery tables" in  {
-    writeGHCND(ghcndData.limit(10))
+   // writeGHCND(ghcndData.filter("date =='2020-10-03'"))
   }*/
 
 }

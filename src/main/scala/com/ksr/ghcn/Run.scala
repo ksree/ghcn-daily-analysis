@@ -33,7 +33,7 @@ object Run {
 
   def transformGHCND(in: Dataset[GHCN_D_RAW])(implicit spark: SparkSession, appConf: AppConfig): Dataset[GHCN_D] = {
     import spark.implicits._
-    in.map(ghcnDTransform.transformGHCNDRaw(_, appConf)).as[GHCN_D]
+    ghcnDTransform.aggregateGHCNDD(in.map(ghcnDTransform.transformGHCNDRaw(_, appConf)).as[GHCN_D]).as[GHCN_D]
   }
 
   def writeGHCND(out: Dataset[GHCN_D])(implicit spark: SparkSession, appConf: AppConfig)= {
@@ -43,7 +43,7 @@ object Run {
       .option("temporaryGcsBucket", appConf.tempGCSBucket)
       .option("partitionField", "partition_date")
       .option("partitionType", "DAY")
-      .option("clusteredFields", "satation_id")
+      .option("clusteredFields", "country")
       .option("allowFieldAddition", "true")  //Adds the ALLOW_FIELD_ADDITION SchemaUpdateOption
       .save(appConf.bigQueryTableName)
   }
