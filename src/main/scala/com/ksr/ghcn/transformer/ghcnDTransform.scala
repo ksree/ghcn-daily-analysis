@@ -101,5 +101,5 @@ object ghcnDTransform {
         first("country_code").as("country_code"),
         first("country").as("country"),
         first("wmo_id").as("wmo_id"),
-        first("partition_date").as("parition_date"))
+        first("partition_date").as("partition_date"))
 }
