@@ -35,7 +35,6 @@ echo "GCP_REGION: $GCP_REGION"
 echo "STORAGE_CLASS: standard(default)"
 export STORAGE_CLASS=standard
 echo "STORAGE LOCATION/REGION: us-east1(default)"
-export LOCATION="us-east1"
 
 echo "Creating a new project $PROJECT_ID"
 gcloud projects create ${PROJECT_ID} --set-as-default
@@ -61,16 +60,7 @@ bq --location=$LOCATION mk \
 	--description 'NOAA gsod weather data' \
 	"${PROJECT_ID}:GlobalHistoricalWeatherData"
 
-echo "Creating Dataproc cluster on free tier quota. Number of worke nodes=3 , worker machine type n1-standard-2"
+echo "Creating Dataproc cluster on free tier quota. Number of worke nodes=3 , worker machine type n1-standard-2, region: ${GCP_REGION}, zone: ${GCP_REGION}-c  "
 echo "Limited quotas in free tier :( " 
-gcloud dataproc clusters create cluster-ghcn --region $LOCATION  \
-	--subnet default \ 
-	--zone "${LOCATION}-c" \ 
-	--master-machine-type n1-standard-2 \
-	--master-boot-disk-size 500 \
-	--num-workers 3 \
-	--worker-machine-type n1-standard-2 \
-	--worker-boot-disk-size 500 \
-	--image-version 1.3-debian10 \
-	--project $PROJECT_ID
 
+gcloud dataproc clusters create cluster-ghcn --region $GCP_REGION --subnet default --zone "${GCP_REGION}-c" --master-machine-type n1-standard-2 --master-boot-disk-size 500 --num-workers 3 --worker-machine-type n1-standard-2 --worker-boot-disk-size 500 --image-version 1.3-debian10 --project $PROJECT_ID
