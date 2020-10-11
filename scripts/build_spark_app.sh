@@ -29,6 +29,8 @@ fi
 echo 'Setting up JAVA8'
 sudo apt-get install -y openjdk-8-jre
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export PROJECT_ID=$(gcloud config get-value project)
+export GCS_TEMPORARY_BUCKET="${PROJECT_ID}-temp-bucket"
 
 cd $HOME/ghcn-daily-analysis/
 mvn package -DskipTests
