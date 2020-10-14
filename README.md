@@ -1,5 +1,9 @@
 # ghcn-daily-analysis
 
+This project loads NOAA Global Historical Climatology Network Daily(GHCN-D) from Amazon S3 to BigQuery
+
+Source : NOAA Global Historical Climatology Network Daily (GHCN-D) pon AWS 
+
 Set the following enviornment variables:
 ```shell script
 GOOGLE_APPLICATION_CREDENTIALS=your_credentials.json
