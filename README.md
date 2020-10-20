@@ -2,6 +2,8 @@
 
 This project loads NOAA Global Historical Climatology Network Daily(GHCN-D) from Amazon S3 to BigQuery
 
+**Follow my medium post for how to guide** https://medium.com/swlh/explore-visualize-200-years-of-global-temperature-using-apache-spark-bigquery-and-google-data-699ed8b3c67?source=friends_link&sk=3721ca3220a75af80293ac3e4bf3f4d1
+
 **Source** : NOAA Global Historical Climatology Network Daily (GHCN-D) pon AWS 
 The GHCH-D data are stored in the noaa-ghcn-pds bucket:
 
